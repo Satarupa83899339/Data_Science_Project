@@ -10,3 +10,13 @@
 <img width="1336" alt="image" src="https://github.com/user-attachments/assets/d0acc820-60da-45eb-9aec-7442b6fa094d" />
 <img width="1329" alt="image" src="https://github.com/user-attachments/assets/b6afbf86-24b1-416d-b7ed-a5f68392523a" />
 <img width="1319" alt="image" src="https://github.com/user-attachments/assets/6f56e311-10ff-4e4c-83f8-0aef30f109ee" />
+
+## TECHNOLOGY USED:
+Technologies Demonstrated:
+
+NumPy - Advanced numerical computing
+Matplotlib - Complex multi-panel visualizations
+Scikit-learn - Machine learning algorithms
+SciPy - Statistical tests and optimization
+Pandas - Time series analysis
+Seaborn - Statistical visualization

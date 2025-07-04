@@ -3,12 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import stats
-from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit, minimize
 from sklearn.datasets import make_blobs, make_classification
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 import seaborn as sns
@@ -19,7 +19,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Set style and color palette
-plt.style.use('seaborn-v0_8-darkgrid')
+plt.style.use('default')
 sns.set_palette("husl")
 np.random.seed(42)
 
@@ -82,6 +82,9 @@ X_train, X_test, y_train, y_test = train_test_split(X_class, y_class, test_size=
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train, y_train)
 y_pred = rf_model.predict(X_test)
+
+# Calculate accuracy safely
+classification_accuracy = accuracy_score(y_test, y_pred)
 
 cm = confusion_matrix(y_test, y_pred)
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax3, 
@@ -160,17 +163,17 @@ y_noise = y_true + np.random.normal(0, 1, len(x_reg))
 degree = 3
 coeffs = np.polyfit(x_reg, y_noise, degree)
 poly_func = np.poly1d(coeffs)
-y_pred = poly_func(x_reg)
+y_pred_reg = poly_func(x_reg)
 
 # Calculate confidence intervals
-residuals = y_noise - y_pred
+residuals = y_noise - y_pred_reg
 mse = np.mean(residuals**2)
 std_error = np.sqrt(mse)
 
 ax6.scatter(x_reg, y_noise, alpha=0.6, color='#FF6B6B', s=60, 
            edgecolors='black', linewidth=0.5, label='Data Points')
-ax6.plot(x_reg, y_pred, color='#2C3E50', linewidth=2, label=f'Polynomial Fit (degree {degree})')
-ax6.fill_between(x_reg, y_pred - 1.96*std_error, y_pred + 1.96*std_error, 
+ax6.plot(x_reg, y_pred_reg, color='#2C3E50', linewidth=2, label=f'Polynomial Fit (degree {degree})')
+ax6.fill_between(x_reg, y_pred_reg - 1.96*std_error, y_pred_reg + 1.96*std_error, 
                  alpha=0.3, color='#3498DB', label='95% Confidence Interval')
 ax6.plot(x_reg, y_true, color='#E74C3C', linewidth=2, linestyle='--', label='True Function')
 
@@ -304,9 +307,7 @@ X, Y = np.meshgrid(x, y)
 # Himmelblau's function - optimization test function
 Z = (X**2 + Y - 11)**2 + (X + Y**2 - 7)**2
 
-# Find minima using optimization
-from scipy.optimize import minimize
-
+# Himmelblau function for optimization
 def himmelblau(vars):
     x, y = vars
     return (x**2 + y - 11)**2 + (x + y**2 - 7)**2
@@ -368,7 +369,7 @@ print("• Pandas - Data manipulation")
 print("• Seaborn - Statistical visualization")
 print("=" * 80)
 print(f"📊 PERFORMANCE METRICS:")
-print(f"• Classification Accuracy: {(y_pred == y_test).mean():.3f}")
+print(f"• Classification Accuracy: {classification_accuracy:.3f}")
 print(f"• PCA Variance Explained: {pca.explained_variance_ratio_.sum():.3f}")
 print(f"• T-test p-value: {t_pvalue:.4f}")
 print(f"• Distribution Fitting - Best Model: {best_fit}")
